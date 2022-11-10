@@ -20,6 +20,19 @@ async function run() {
         await client.connect()
         const servicesCollection = client.db("cakeHouse").collection('cakes')
 
+        app.post('/cakes', async (req, res) => {
+            const order = req.body;
+            const result = await servicesCollection.insertOne(order);
+            res.send(result);
+        })
+
+        app.get('/feature', async (req, res) => {
+            const query = {}
+            const cursor = servicesCollection.find(query)
+            const services = await cursor.limit(3).toArray()
+            res.send(services)
+        })
+
     } catch (error) {
         console.log(error.name.bgRed.bold, error.message) 
     }
