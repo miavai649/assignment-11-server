@@ -19,7 +19,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         
-        await client.connect()
+        // await client.connect()
         const servicesCollection = client.db("cakeHouse").collection('cakes')
 
         app.post('/cakes', async (req, res) => {
