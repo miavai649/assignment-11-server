@@ -17,6 +17,9 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         
+        await client.connect()
+        const servicesCollection = client.db("cakeHouse").collection('cakes')
+
     } catch (error) {
         console.log(error.name.bgRed.bold, error.message) 
     }
