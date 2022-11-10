@@ -18,7 +18,7 @@ async function run() {
     try {
         
     } catch (error) {
-        
+        console.log(error.name.bgRed.bold, error.message) 
     }
 }
 
