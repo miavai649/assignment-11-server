@@ -40,6 +40,15 @@ async function run() {
             res.send(services)
         })
 
+        app.get('/product/:id', async (req, res) => {
+            console.log()
+            const id = req.params.id
+            const query = {_id: ObjectId(id)}
+            const result = await servicesCollection.findOne(query)
+            console.log(result)
+            res.send(result)
+        })
+
     } catch (error) {
         console.log(error.name.bgRed.bold, error.message) 
     }
