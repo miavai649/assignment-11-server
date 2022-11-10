@@ -12,6 +12,8 @@ app.use(express.json())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.o9jnfig.mongodb.net/?retryWrites=true&w=majority`;
 
+console.log(uri)
+
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
@@ -61,3 +63,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => console.log(`server running on port: ${port}`.cyan))
+
+module.exports = app;
