@@ -12,8 +12,6 @@ app.use(express.json())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.o9jnfig.mongodb.net/?retryWrites=true&w=majority`;
 
-console.log(uri)
-
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
@@ -21,6 +19,7 @@ async function run() {
         
         // await client.connect()
         const servicesCollection = client.db("cakeHouse").collection('cakes')
+        const reviewCollection = client.db("cakeHouse").collection('reviews')
 
         app.post('/cakes', async (req, res) => {
             const order = req.body;
@@ -43,11 +42,54 @@ async function run() {
         })
 
         app.get('/product/:id', async (req, res) => {
-            console.log()
             const id = req.params.id
-            const query = {_id: ObjectId(id)}
+            const query = { _id: ObjectId(id) }
             const result = await servicesCollection.findOne(query)
-            console.log(result)
+            res.send(result)
+        })
+
+        // reviews api
+        app.post('/review', async (req, res) => {
+            const review = req.body
+            const result = await reviewCollection.insertOne(review)
+            res.send(result)
+        })
+
+        app.get('/allreviews/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { serviceId: id }
+            const cursor = reviewCollection.find(query)
+            const reviews = await cursor.toArray()
+            res.send(reviews)
+        })
+
+        app.get('/myreviews/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { email: email }
+            const cursor = reviewCollection.find(query)
+            const myReviews = await cursor.toArray()
+            res.send(myReviews)
+        },)
+
+        app.delete('/myreviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await reviewCollection.deleteOne(query)
+            res.send(result)
+        })
+
+        app.get('/myreview/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await reviewCollection.findOne(query)
+            res.send(result)
+        })
+
+        app.patch('/myreview/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) };
+            const updatedDoc = { $set: req.body };
+            const result = await reviewCollection.updateOne(filter, updatedDoc)
             res.send(result)
         })
 
